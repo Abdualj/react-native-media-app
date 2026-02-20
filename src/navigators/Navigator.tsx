@@ -2,9 +2,11 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {MaterialIcons} from '@expo/vector-icons';
+import {useUserContext} from '../hooks/ContextHooks';
 import Home from '../views/Home';
 import Profile from '../views/Profile';
 import Single from '../views/Single';
+import Login from '../views/Login';
 import {RootStackParamList, TabParamList} from '../types/NavigationTypes';
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -65,9 +67,11 @@ const StackScreen = () => {
 };
 
 const Navigator = () => {
+  const {user} = useUserContext();
+
   return (
     <NavigationContainer>
-      <StackScreen />
+      {user ? <StackScreen /> : <Login />}
     </NavigationContainer>
   );
 };

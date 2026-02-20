@@ -21,4 +21,32 @@ type UploadResult = {
   };
 };
 
-export type {MediaItemWithOwner, MediaItem, UploadResult};
+type Credentials = {
+  username: string;
+  password: string;
+};
+
+type User = {
+  user_id: number;
+  username: string;
+  email: string;
+  created_at: Date | string;
+};
+
+type AuthResponse = {
+  message: string;
+  token?: string;
+  user?: User;
+};
+
+type UserWithoutPassword = Omit<User, 'password'>;
+
+export type {
+  MediaItemWithOwner,
+  MediaItem,
+  UploadResult,
+  Credentials,
+  User,
+  AuthResponse,
+  UserWithoutPassword,
+};
