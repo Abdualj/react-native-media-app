@@ -1,6 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
+import {MaterialIcons} from '@expo/vector-icons';
 import Home from '../views/Home';
 import Profile from '../views/Profile';
 import Single from '../views/Single';
@@ -23,6 +24,9 @@ const TabScreen = () => {
         options={{
           title: 'Home',
           headerShown: true,
+          tabBarIcon: ({color}) => (
+            <MaterialIcons name="home" size={24} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -31,6 +35,9 @@ const TabScreen = () => {
         options={{
           title: 'Profile',
           headerShown: true,
+          tabBarIcon: ({color}) => (
+            <MaterialIcons name="person" size={24} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>

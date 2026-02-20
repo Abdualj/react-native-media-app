@@ -1,7 +1,7 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {CompositeNavigationProp} from '@react-navigation/native';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {ListItem, Avatar, Text} from '@rneui/themed';
 import {MediaItemWithOwner} from '../types/DBTypes';
 import {formatDate, getMediaUrl} from '../lib/functions';
 import {RootStackParamList, TabParamList} from '../types/NavigationTypes';
@@ -22,80 +22,27 @@ const MediaListItem = ({item, navigation}: MediaListItemProps) => {
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={handlePress}>
-      <Image
+    <ListItem onPress={handlePress} bottomDivider>
+      <Avatar
         source={{uri: getMediaUrl(item.filename)}}
-        style={styles.image}
-        resizeMode="cover"
+        size={80}
+        rounded
+        containerStyle={{backgroundColor: '#f0f0f0'}}
       />
-      <View style={styles.info}>
-        <Text style={styles.title}>{item.title}</Text>
+      <ListItem.Content>
+        <ListItem.Title>{item.title}</ListItem.Title>
         {item.description && (
-          <Text style={styles.description} numberOfLines={2}>
+          <ListItem.Subtitle numberOfLines={2}>
             {item.description}
-          </Text>
+          </ListItem.Subtitle>
         )}
-        <View style={styles.metadata}>
-          <Text style={styles.username}>@{item.username}</Text>
-          <Text style={styles.date}>{formatDate(item.created_at)}</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+        <Text style={{fontSize: 12, color: '#888', marginTop: 4}}>
+          @{item.username} • {formatDate(item.created_at)}
+        </Text>
+      </ListItem.Content>
+      <ListItem.Chevron />
+    </ListItem>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    padding: 12,
-    backgroundColor: '#fff',
-    marginVertical: 4,
-    marginHorizontal: 8,
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  image: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
-    backgroundColor: '#f0f0f0',
-  },
-  info: {
-    flex: 1,
-    marginLeft: 12,
-    justifyContent: 'space-between',
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  description: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 4,
-  },
-  metadata: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 8,
-  },
-  username: {
-    fontSize: 12,
-    color: '#888',
-    fontWeight: '600',
-  },
-  date: {
-    fontSize: 12,
-    color: '#888',
-  },
-});
 
 export default MediaListItem;
