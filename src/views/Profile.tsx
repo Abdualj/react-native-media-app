@@ -1,9 +1,14 @@
 import {ScrollView} from 'react-native';
 import {Card, ListItem, Button} from '@rneui/themed';
 import {useUserContext} from '../hooks/ContextHooks';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../types/NavigationTypes';
 
 const Profile = () => {
   const {user, handleLogout} = useUserContext();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   if (!user) {
     return null;
@@ -40,6 +45,12 @@ const Profile = () => {
       </Card>
 
       <Card>
+        <Button
+          title="My Files"
+          onPress={() => navigation.navigate('MyFiles')}
+          icon={{name: 'folder', type: 'material', color: 'white'}}
+          containerStyle={{marginBottom: 12}}
+        />
         <Button title="Logout" onPress={handleLogout} color="error" />
       </Card>
     </ScrollView>
