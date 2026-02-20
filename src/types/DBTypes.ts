@@ -21,6 +21,15 @@ type UploadResult = {
   };
 };
 
+type UploadResponse = {
+  message: string;
+  data: {
+    filename: string;
+    media_type: string;
+    filesize: number;
+  };
+};
+
 type Credentials = {
   username: string;
   password: string;
@@ -45,6 +54,7 @@ export type {
   MediaItemWithOwner,
   MediaItem,
   UploadResult,
+  UploadResponse,
   Credentials,
   User,
   AuthResponse,

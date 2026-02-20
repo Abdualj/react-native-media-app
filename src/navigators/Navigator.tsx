@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {MaterialIcons} from '@expo/vector-icons';
 import {useUserContext} from '../hooks/ContextHooks';
 import Home from '../views/Home';
+import Upload from '../views/Upload';
 import Profile from '../views/Profile';
 import Single from '../views/Single';
 import Login from '../views/Login';
@@ -29,6 +30,17 @@ const TabScreen = () => {
           headerShown: true,
           tabBarIcon: ({color}) => (
             <MaterialIcons name="home" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Upload"
+        component={Upload}
+        options={{
+          title: 'Upload',
+          headerShown: true,
+          tabBarIcon: ({color}) => (
+            <MaterialIcons name="add-circle" size={24} color={color} />
           ),
         }}
       />

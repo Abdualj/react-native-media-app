@@ -1,7 +1,10 @@
 import {useEffect, useState} from 'react';
-import {MediaItemWithOwner, User} from '../types/DBTypes';
+import * as FileSystem from 'expo-file-system';
+import {MediaItemWithOwner, UploadResponse} from '../types/DBTypes';
+import {useUpdateContext} from './ContextHooks';
 
 const useMedia = () => {
+  const {update} = useUpdateContext();
   const [mediaArray, setMediaArray] = useState<MediaItemWithOwner[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +31,7 @@ const useMedia = () => {
 
   useEffect(() => {
     getMedia();
-  }, []);
+  }, [update]);
 
   return {mediaArray, loading, error, getMedia};
 };
@@ -37,8 +40,37 @@ const useFile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const postExpoFile = async (
+    imageUri: string,
+    token: string
+  ): Promise<UploadResponse | null> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const fileResult = await FileSystem.uploadAsync(
+        `${process.env.EXPO_PUBLIC_MEDIA_SERVER}/api/media/upload`,
+        imageUri,
+        {
+          httpMethod: 'POST',
+          uploadType: 1, // MULTIPART
+          fieldName: 'file',
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        }
+      );
+      return fileResult.body ? JSON.parse(fileResult.body) : null;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      console.error('Error uploading file:', err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const postMedia = async (
-    formData: FormData,
+    data: {filename: string; title: string; description: string},
     token: string
   ): Promise<{media_id: number} | null> => {
     setLoading(true);
@@ -49,26 +81,27 @@ const useFile = () => {
         {
           method: 'POST',
           headers: {
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: formData,
+          body: JSON.stringify(data),
         }
       );
       if (!response.ok) {
-        throw new Error('Failed to upload media');
+        throw new Error('Failed to save media metadata');
       }
-      const data = await response.json();
-      return data;
+      const result = await response.json();
+      return result;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
-      console.error('Error uploading media:', err);
+      console.error('Error saving media:', err);
       return null;
     } finally {
       setLoading(false);
     }
   };
 
-  return {postMedia, loading, error};
+  return {postExpoFile, postMedia, loading, error};
 };
 
 const useUser = () => {
