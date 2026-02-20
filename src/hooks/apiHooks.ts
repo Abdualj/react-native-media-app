@@ -101,7 +101,70 @@ const useFile = () => {
     }
   };
 
-  return {postExpoFile, postMedia, loading, error};
+  const putMedia = async (
+    mediaId: number,
+    data: {title: string; description: string},
+    token: string
+  ): Promise<{message: string} | null> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_MEDIA_SERVER}/api/media/${mediaId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Failed to update media');
+      }
+      const result = await response.json();
+      return result;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      console.error('Error updating media:', err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteMedia = async (
+    mediaId: number,
+    token: string
+  ): Promise<{message: string} | null> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_MEDIA_SERVER}/api/media/${mediaId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Failed to delete media');
+      }
+      const result = await response.json();
+      return result;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      console.error('Error deleting media:', err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {postExpoFile, postMedia, putMedia, deleteMedia, loading, error};
 };
 
 const useUser = () => {

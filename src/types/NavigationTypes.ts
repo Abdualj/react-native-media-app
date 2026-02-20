@@ -6,6 +6,9 @@ export type RootStackParamList = {
     item: MediaItemWithOwner;
   };
   MyFiles: undefined;
+  Modify: {
+    item: MediaItemWithOwner;
+  };
 };
 
 export type TabParamList = {

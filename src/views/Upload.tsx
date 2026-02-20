@@ -3,6 +3,7 @@ import {Alert, Image, ScrollView, View} from 'react-native';
 import {Card, Input, Button} from '@rneui/themed';
 import {Controller, useForm} from 'react-hook-form';
 import * as ImagePicker from 'expo-image-picker';
+import {Video, ResizeMode} from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
@@ -22,6 +23,8 @@ const Upload = () => {
   const [image, setImage] = useState<ImagePicker.ImagePickerAsset | null>(
     null
   );
+
+  const isVideo = image?.type === 'video';
 
   const initValues: UploadFormData = {title: '', description: ''};
   const {
@@ -110,14 +113,24 @@ const Upload = () => {
         <Card.Title>Upload Media</Card.Title>
         <Card.Divider />
 
-        {/* Image Preview */}
+        {/* Image/Video Preview */}
         <View style={{alignItems: 'center', marginBottom: 20}}>
           {image ? (
-            <Image
-              source={{uri: image.uri}}
-              style={{width: '100%', height: 200, borderRadius: 8}}
-              resizeMode="contain"
-            />
+            isVideo ? (
+              <Video
+                source={{uri: image.uri}}
+                style={{width: '100%', height: 200, borderRadius: 8}}
+                useNativeControls
+                resizeMode={ResizeMode.CONTAIN}
+                shouldPlay={false}
+              />
+            ) : (
+              <Image
+                source={{uri: image.uri}}
+                style={{width: '100%', height: 200, borderRadius: 8}}
+                resizeMode="contain"
+              />
+            )
           ) : (
             <View
               style={{

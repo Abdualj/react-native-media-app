@@ -5,7 +5,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Text} from '@rneui/themed';
 import {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useUserContext} from '../hooks/ContextHooks';
+import {useUserContext, useUpdateContext} from '../hooks/ContextHooks';
 import MediaListItem from '../components/MediaListItem';
 import {RootStackParamList, TabParamList} from '../types/NavigationTypes';
 import {MediaItemWithOwner} from '../types/DBTypes';
@@ -21,6 +21,7 @@ type MyFilesProps = {
 
 const MyFiles = ({navigation}: MyFilesProps) => {
   const {user} = useUserContext();
+  const {update} = useUpdateContext();
   const [myMedia, setMyMedia] = useState<MediaItemWithOwner[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +56,7 @@ const MyFiles = ({navigation}: MyFilesProps) => {
 
   useEffect(() => {
     fetchMyMedia();
-  }, [user]);
+  }, [user, update]);
 
   if (error) {
     return (

@@ -9,6 +9,7 @@ import Profile from '../views/Profile';
 import Single from '../views/Single';
 import Login from '../views/Login';
 import MyFiles from '../views/MyFiles';
+import Modify from '../views/Modify';
 import {RootStackParamList, TabParamList} from '../types/NavigationTypes';
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -80,6 +81,14 @@ const StackScreen = () => {
         component={MyFiles}
         options={{
           title: 'My Files',
+          headerBackTitle: 'Back',
+        }}
+      />
+      <Stack.Screen
+        name="Modify"
+        component={Modify}
+        options={{
+          title: 'Modify Media',
           headerBackTitle: 'Back',
         }}
       />
