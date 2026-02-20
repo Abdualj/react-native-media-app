@@ -1,17 +1,24 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {CompositeNavigationProp} from '@react-navigation/native';
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MediaItemWithOwner} from '../types/DBTypes';
 import {formatDate, getMediaUrl} from '../lib/functions';
+import {RootStackParamList, TabParamList} from '../types/NavigationTypes';
+
+type NavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<TabParamList, 'Home'>,
+  NativeStackNavigationProp<RootStackParamList>
+>;
 
 type MediaListItemProps = {
   item: MediaItemWithOwner;
-  onPress?: (item: MediaItemWithOwner) => void;
+  navigation: NavigationProp;
 };
 
-const MediaListItem = ({item, onPress}: MediaListItemProps) => {
+const MediaListItem = ({item, navigation}: MediaListItemProps) => {
   const handlePress = () => {
-    if (onPress) {
-      onPress(item);
-    }
+    navigation.navigate('Single', {item});
   };
 
   return (

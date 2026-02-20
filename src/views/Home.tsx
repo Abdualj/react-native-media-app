@@ -6,20 +6,27 @@ import {
   Text,
   View,
 } from 'react-native';
+import {CompositeNavigationProp} from '@react-navigation/native';
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useMedia} from '../hooks/apiHooks';
 import MediaListItem from '../components/MediaListItem';
-import {MediaItemWithOwner} from '../types/DBTypes';
+import {RootStackParamList, TabParamList} from '../types/NavigationTypes';
 
-const Home = () => {
+type HomeNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<TabParamList, 'Home'>,
+  NativeStackNavigationProp<RootStackParamList>
+>;
+
+type HomeProps = {
+  navigation: HomeNavigationProp;
+};
+
+const Home = ({navigation}: HomeProps) => {
   const {mediaArray, loading, error, getMedia} = useMedia();
 
   const handleRefresh = () => {
     getMedia();
-  };
-
-  const handleMediaPress = (item: MediaItemWithOwner) => {
-    console.log('Media item pressed:', item.title);
-    // TODO: Navigate to media detail view
   };
 
   if (error) {
@@ -41,7 +48,7 @@ const Home = () => {
         <FlatList
           data={mediaArray}
           renderItem={({item}) => (
-            <MediaListItem item={item} onPress={handleMediaPress} />
+            <MediaListItem item={item} navigation={navigation} />
           )}
           keyExtractor={(item) => item.media_id.toString()}
           contentContainerStyle={styles.listContent}
